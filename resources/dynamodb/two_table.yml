@@ -1,0 +1,34 @@
+Resources:
+  TwoTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.twoTableName}
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: yearMonth
+          AttributeType: S
+        - AttributeName: countryCity
+          AttributeType: S
+      KeySchema:
+        - AttributeName: yearMonth
+          KeyType: HASH
+        - AttributeName: countryCity
+          KeyType: RANGE
+
+      # Set the capacity based on the stage
+      ProvisionedThroughput:
+        ReadCapacityUnits: ${self:custom.tableThroughput}
+        WriteCapacityUnits: ${self:custom.tableThroughput}
+
+      GlobalSecondaryIndexes:
+        - IndexName: usersIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          # Set the capacity based on the stage
+          ProvisionedThroughput:
+            ReadCapacityUnits: ${self:custom.tableThroughput}
+            WriteCapacityUnits: ${self:custom.tableThroughput}
